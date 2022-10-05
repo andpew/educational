@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Educational.Core.WebAPI", "Educational.Core.WebAPI\Educational.Core.WebAPI.csproj", "{6B812192-A251-491F-AF3F-8C9D0C829DB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Educational.Core.WebAPI", "Educational.Core.WebAPI\Educational.Core.WebAPI.csproj", "{6B812192-A251-491F-AF3F-8C9D0C829DB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Educational.Core.DAL", "Educational.Core.DAL\Educational.Core.DAL.csproj", "{F132A108-713D-4E93-9ED7-FAB31DBDA85C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Educational.Core.BLL", "Educational.Core.BLL\Educational.Core.BLL.csproj", "{A0F72D72-54AF-4B20-9520-2F68FDF551C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Educational.Core.Common", "Educational.Core.Common\Educational.Core.Common.csproj", "{FEDCD490-B0DC-4839-A173-0890C452F73E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{6B812192-A251-491F-AF3F-8C9D0C829DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B812192-A251-491F-AF3F-8C9D0C829DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B812192-A251-491F-AF3F-8C9D0C829DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F132A108-713D-4E93-9ED7-FAB31DBDA85C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F132A108-713D-4E93-9ED7-FAB31DBDA85C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F132A108-713D-4E93-9ED7-FAB31DBDA85C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F132A108-713D-4E93-9ED7-FAB31DBDA85C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F72D72-54AF-4B20-9520-2F68FDF551C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F72D72-54AF-4B20-9520-2F68FDF551C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F72D72-54AF-4B20-9520-2F68FDF551C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F72D72-54AF-4B20-9520-2F68FDF551C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEDCD490-B0DC-4839-A173-0890C452F73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEDCD490-B0DC-4839-A173-0890C452F73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEDCD490-B0DC-4839-A173-0890C452F73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEDCD490-B0DC-4839-A173-0890C452F73E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
