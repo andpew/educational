@@ -27,3 +27,13 @@ Just an educational project for repeating and consolidating acquired knowledge.
 - [Visual Studio](https://visualstudio.microsoft.com/vs/)
 
 ## DB Schema
+```mermaid
+erDiagram
+    Users {
+        integer Id PK
+        text UserName 
+        timestamp_with_time_zone CreatedAt 
+        timestamp_with_time_zone UpdatedAt 
+    }
+
+```
