@@ -16,7 +16,7 @@ public static class WebApplicationBuilderExtensions
         AddLogger(builder);
         AddDatabase(builder);
 
-        builder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
+        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddMvc();
