@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { BaseComponent } from './base/base.component';
@@ -8,7 +8,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [BaseComponent],
-  imports: [SharedModule],
+  imports: [SharedModule, HttpClientModule],
   providers: [
     {
       provide: ErrorHandler,
