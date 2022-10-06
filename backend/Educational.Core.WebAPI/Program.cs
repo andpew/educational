@@ -1,7 +1,4 @@
-using Educational.Core.DAL;
 using Educational.Core.WebAPI.Extensions;
-using Educational.Core.WebAPI.Middlewares;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +8,7 @@ builder.WebHost.UseUrls("https://*:5000");
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-    db.Database.Migrate();
-}
+app.ApplyDbMigrations();
 
 app.UseExceptionMiddleware();
 
