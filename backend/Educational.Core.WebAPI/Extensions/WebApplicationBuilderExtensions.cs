@@ -18,10 +18,9 @@ public static class WebApplicationBuilderExtensions
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
         builder.Services.AddMvc();
 
-        builder.Services.AddScoped<IUserService, UserService>();
+        AddCustomServices(builder);
     }
 
     private static void AddLogger(WebApplicationBuilder builder)
@@ -49,5 +48,10 @@ public static class WebApplicationBuilderExtensions
             o.UseNpgsql(builder.Configuration.GetConnectionString("Educational"))
                 .EnableDetailedErrors();
         });
+    }
+
+    private static void AddCustomServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<IUserService, UserService>();
     }
 }
