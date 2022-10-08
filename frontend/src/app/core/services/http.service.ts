@@ -16,6 +16,22 @@ export class HttpService {
     return this.headers;
   }
 
+  public getRequest<T>(url: string): Observable<T> {
+    return this.http.get<T>(this.buildUrl(url));
+  }
+
+  public postRequest<T>(url: string, payload: object): Observable<T> {
+    return this.http.post<T>(this.buildUrl(url), payload);
+  }
+
+  public putRequest<T>(url: string, payload: object): Observable<T> {
+    return this.http.put<T>(this.buildUrl(url), payload);
+  }
+
+  public deleteRequest<T>(url: string): Observable<T> {
+    return this.http.delete<T>(this.buildUrl(url));
+  }
+
   public getFullRequest<T>(url: string, httpParams?: HttpParams): Observable<HttpResponse<T>> {
     return this.http.get<T>(this.buildUrl(url), {
       observe: 'response', headers: this.getHeaders(),
