@@ -1,4 +1,5 @@
-﻿using Educational.Core.BLL.Services;
+﻿using Educational.Core.BLL.MappingProfiles;
+using Educational.Core.BLL.Services;
 using Educational.Core.BLL.Services.Abstract;
 using Educational.Core.DAL;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +58,7 @@ public static class WebApplicationBuilderExtensions
     {
         builder.Services.AddAutoMapper(cfg =>
         {
-
+            cfg.AddProfile<UserProfile>();
         });
         Assembly.GetExecutingAssembly();
     }
