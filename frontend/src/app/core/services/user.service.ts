@@ -13,7 +13,7 @@ export class UserService {
 
   constructor(private httpService: HttpService) { }
 
-  getAllUsers(): Observable<HttpResponse<User[]>> {
-    return this.httpService.getFullRequest<User[]>(this.routePrefix + '/all');
+  getAllUsers(): Observable<User[]> {
+    return this.httpService.getRequest<User[]>(this.routePrefix + '/all');
   }
 }

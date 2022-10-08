@@ -15,11 +15,11 @@ export class AuthService {
 
   constructor(private httpService: HttpService) { }
 
-  register(userRegister: UserRegister): Observable<HttpResponse<User>> {
-    return this.httpService.postFullRequest<User>(this.routePrefix + '/register', userRegister);
+  register(userRegister: UserRegister): Observable<User> {
+    return this.httpService.postRequest<User>(this.routePrefix + '/register', userRegister);
   }
 
-  login(userLogin: UserLogin): Observable<HttpResponse<User>> {
-    return this.httpService.postFullRequest<User>(this.routePrefix + '/login', userLogin);
+  login(userLogin: UserLogin): Observable<User> {
+    return this.httpService.postRequest<User>(this.routePrefix + '/login', userLogin);
   }
 }
