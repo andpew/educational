@@ -17,13 +17,13 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDTO userDTO)
     {
         return Ok(await _authService.Register(userDTO));
     }
 
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Authorize([FromBody] UserLoginDTO userDTO)
     {
         return Ok(await _authService.Authorize(userDTO));
