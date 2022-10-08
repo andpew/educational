@@ -1,8 +1,8 @@
-﻿using Educational.Core.DAL.Entities;
+﻿using Educational.Core.Common.DTO.User;
 
 namespace Educational.Core.BLL.Services.Abstract;
 
 public interface IUserService
 {
-    Task<IEnumerable<User>> GetAllUsers();
+    Task<IEnumerable<UserDTO>> GetAllUsers();
 }
