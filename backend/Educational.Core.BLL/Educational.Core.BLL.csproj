@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Educational.Core.Common\Educational.Core.Common.csproj" />
     <ProjectReference Include="..\Educational.Core.DAL\Educational.Core.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MappingProfiles\" />
   </ItemGroup>
 
 </Project>

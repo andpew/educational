@@ -52,6 +52,8 @@ public static class WebApplicationBuilderExtensions
 
     private static void AddCustomServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IAuthService, AuthService>();
     }
 }
