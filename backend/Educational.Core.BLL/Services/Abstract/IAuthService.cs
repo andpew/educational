@@ -5,6 +5,6 @@ namespace Educational.Core.BLL.Services.Abstract;
 
 public interface IAuthService
 {
-    Task<UserDTO?> Authorize(UserLoginDTO userDto);
-    Task<UserDTO?> Register(UserRegisterDTO userDto);
+    Task<UserDTO> Authorize(UserLoginDTO userDto);
+    Task<UserDTO> Register(UserRegisterDTO userDto);
 }
