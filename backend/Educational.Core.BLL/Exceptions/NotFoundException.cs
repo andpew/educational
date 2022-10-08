@@ -2,7 +2,7 @@
 
 public class NotFoundException : Exception
 {
-    public NotFoundException(string entityName) : base($"Entity {entityName} Not Found")
+    public NotFoundException(string message) : base(message)
     {
 
     }
