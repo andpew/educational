@@ -2,7 +2,7 @@
 
 namespace Educational.Core.DAL.Entities;
 
-public class User : BaseEntity
+public sealed class User : BaseEntity
 {
     public string UserName { get; set; } = null!;
     public byte[] PasswordHash { get; set; } = new byte[32];

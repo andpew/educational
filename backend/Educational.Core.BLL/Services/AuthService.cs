@@ -5,7 +5,7 @@ using Educational.Core.DAL;
 
 namespace Educational.Core.BLL.Services;
 
-public class AuthService : IAuthService
+public sealed class AuthService : IAuthService
 {
     private readonly DataContext _db;
     public AuthService(DataContext db)

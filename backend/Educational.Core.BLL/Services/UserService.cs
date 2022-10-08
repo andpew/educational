@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Educational.Core.BLL.Services;
 
-public class UserService : IUserService
+public sealed class UserService : IUserService
 {
     private readonly DataContext _db;
     public UserService(DataContext db)
