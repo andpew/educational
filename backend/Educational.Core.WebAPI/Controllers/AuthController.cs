@@ -1,4 +1,4 @@
-﻿using Educational.Core.BLL.Services.Abstract;
+﻿using Educational.Core.BLL.Services.Interfaces;
 using Educational.Core.Common.DTO.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

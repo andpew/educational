@@ -1,6 +1,6 @@
 ﻿using Educational.Core.BLL.MappingProfiles;
 using Educational.Core.BLL.Services;
-using Educational.Core.BLL.Services.Abstract;
+using Educational.Core.BLL.Services.Interfaces;
 using Educational.Core.DAL;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

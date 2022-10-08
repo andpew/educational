@@ -2,6 +2,7 @@
 using Educational.Core.BLL.Exceptions;
 using Educational.Core.BLL.Security;
 using Educational.Core.BLL.Services.Abstract;
+using Educational.Core.BLL.Services.Interfaces;
 using Educational.Core.Common.DTO.Auth;
 using Educational.Core.Common.DTO.User;
 using Educational.Core.DAL;
@@ -10,15 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Educational.Core.BLL.Services;
 
-public sealed class AuthService : IAuthService
+public sealed class AuthService : BaseService, IAuthService
 {
-    private readonly DataContext _db;
-    private readonly IMapper _mapper;
-    public AuthService(DataContext db, IMapper mapper)
-    {
-        _db = db;
-        _mapper = mapper;
-    }
+    public AuthService(DataContext db, IMapper mapper) : base(db, mapper) { }
 
     public async Task<UserDTO> Authorize(UserLoginDTO userDto)
     {

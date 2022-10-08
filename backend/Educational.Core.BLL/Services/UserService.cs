@@ -1,20 +1,15 @@
 ﻿using AutoMapper;
 using Educational.Core.BLL.Services.Abstract;
+using Educational.Core.BLL.Services.Interfaces;
 using Educational.Core.Common.DTO.User;
 using Educational.Core.DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace Educational.Core.BLL.Services;
 
-public sealed class UserService : IUserService
+public sealed class UserService : BaseService, IUserService
 {
-    private readonly DataContext _db;
-    private readonly IMapper _mapper;
-    public UserService(DataContext db, IMapper mapper)
-    {
-        _db = db;
-        _mapper = mapper;
-    }
+    public UserService(DataContext db, IMapper mapper) : base(db, mapper) { }
 
     public async Task<IEnumerable<UserDTO>> GetAllUsers()
     {

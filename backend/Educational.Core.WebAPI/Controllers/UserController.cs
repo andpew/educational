@@ -1,4 +1,4 @@
-﻿using Educational.Core.BLL.Services.Abstract;
+﻿using Educational.Core.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
