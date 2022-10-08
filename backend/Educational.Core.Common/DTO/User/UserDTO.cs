@@ -3,6 +3,6 @@
 public sealed class UserDTO
 {
     public int Id { get; set; }
-    public string UserName { get; set; } = null!;
+    public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;
 }

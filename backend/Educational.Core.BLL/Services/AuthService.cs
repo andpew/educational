@@ -22,7 +22,7 @@ public sealed class AuthService : IAuthService
 
     public async Task<UserDTO> Authorize(UserLoginDTO userDto)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == userDto.UserName);
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == userDto.Username);
 
         if (user is null)
         {
@@ -48,7 +48,7 @@ public sealed class AuthService : IAuthService
 
         User user = new()
         {
-            UserName = userDto.UserName,
+            Username = userDto.Username,
             Email = userDto.Email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt
