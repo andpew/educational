@@ -17,10 +17,20 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
         switch (err.status) {
-
+          case 0:
+            return this.handleNoConnection(err);
         }
         return throwError(() => err);
       })
     );
+  }
+
+  private handleNoConnection(err: HttpErrorResponse): Observable<never> {
+    const error = {
+      name: 'No connection',
+      message: err.url
+    } as Error;
+
+    return throwError(() => error);
   }
 }
