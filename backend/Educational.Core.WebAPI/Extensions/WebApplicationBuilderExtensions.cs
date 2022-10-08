@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using System.Reflection;
 using ILogger = Serilog.ILogger;
 
 namespace Educational.Core.WebAPI.Extensions;
@@ -19,6 +20,8 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddMvc();
+
+        AddAutoMapper(builder);
 
         AddCustomServices(builder);
     }
@@ -48,6 +51,15 @@ public static class WebApplicationBuilderExtensions
             o.UseNpgsql(builder.Configuration.GetConnectionString("Educational"))
                 .EnableDetailedErrors();
         });
+    }
+
+    private static void AddAutoMapper(WebApplicationBuilder builder)
+    {
+        builder.Services.AddAutoMapper(cfg =>
+        {
+
+        });
+        Assembly.GetExecutingAssembly();
     }
 
     private static void AddCustomServices(WebApplicationBuilder builder)
