@@ -2,6 +2,8 @@ using Educational.Core.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+
 builder.ConfigureServices();
 
 builder.WebHost.UseUrls("https://*:5000");
@@ -26,11 +28,10 @@ if (app.Environment.IsDevelopment())
 };
 
 app.UseHttpsRedirection();
-app.UseRouting();
 
-app.UseEndpoints(cfg =>
-{
-    cfg.MapControllers();
-});
+app.UseAuthorization();
+app.UseAuthentication();
+
+app.MapControllers();
 
 app.Run();

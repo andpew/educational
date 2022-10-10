@@ -2,11 +2,16 @@
 using Educational.Core.BLL.Services;
 using Educational.Core.BLL.Services.Interfaces;
 using Educational.Core.DAL;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using System.Text;
 using ILogger = Serilog.ILogger;
 
 namespace Educational.Core.WebAPI.Extensions;
@@ -18,9 +23,9 @@ public static class WebApplicationBuilderExtensions
         AddLogger(builder);
         AddDatabase(builder);
 
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        AddSwagger(builder);
         builder.Services.AddMvc();
+        AddJwt(builder);
 
         AddAutoMapper(builder);
 
@@ -68,5 +73,48 @@ public static class WebApplicationBuilderExtensions
         builder.Services
             .AddScoped<IUserService, UserService>()
             .AddScoped<IAuthService, AuthService>();
+    }
+
+    private static void AddSwagger(WebApplicationBuilder builder)
+    {
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                Description = "JWT Authorization header using the Bearer scheme. " +
+                    "\r\n\r\nExample: \"Bearer 12345abcdef\""
+            });
+
+            options.OperationFilter<SecurityRequirementsOperationFilter>();
+        });
+    }
+
+    private static void AddJwt(WebApplicationBuilder builder)
+    {
+        var jwtOptions = builder.Configuration.GetSection("JwtIssuerOptions");
+
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions["Key"])),
+
+                    ValidateLifetime = true,
+
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtOptions["Issuer"],
+
+                    ValidateAudience = true,
+                    ValidAudience = jwtOptions["Audience"]
+                };
+            });
     }
 }
