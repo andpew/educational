@@ -11,7 +11,6 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
-using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 using System.Text;
 using ILogger = Serilog.ILogger;
@@ -90,7 +89,20 @@ public static class WebApplicationBuilderExtensions
                     "\r\n\r\nExample: \"Bearer 12345abcdef\""
             });
 
-            options.OperationFilter<SecurityRequirementsOperationFilter>();
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
         });
     }
 
