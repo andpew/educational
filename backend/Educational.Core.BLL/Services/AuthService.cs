@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Educational.Core.BLL.Exceptions;
+using Educational.Core.BLL.Factories;
 using Educational.Core.BLL.Security;
 using Educational.Core.BLL.Services.Abstract;
 using Educational.Core.BLL.Services.Interfaces;
@@ -13,9 +14,13 @@ namespace Educational.Core.BLL.Services;
 
 public sealed class AuthService : BaseService, IAuthService
 {
-    public AuthService(DataContext db, IMapper mapper) : base(db, mapper) { }
+    private readonly JwtFactory _jwtFactory;
+    public AuthService(DataContext db, IMapper mapper, JwtFactory jwtFactory) : base(db, mapper)
+    {
+        _jwtFactory = jwtFactory;
+    }
 
-    public async Task<UserDTO> Authorize(UserLoginDTO userDto)
+    public async Task<AuthTokenDTO> Authorize(UserLoginDTO userDto)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == userDto.Username);
 
@@ -34,7 +39,10 @@ public sealed class AuthService : BaseService, IAuthService
             throw new InvalidPasswordException("Invalid password");
         }
 
-        return _mapper.Map<UserDTO>(user);
+        return new()
+        {
+            Token = _jwtFactory.GenerateToken(user.Id, user.Username, user.Email)
+        };
     }
 
     public async Task<UserDTO> Register(UserRegisterDTO userDto)
