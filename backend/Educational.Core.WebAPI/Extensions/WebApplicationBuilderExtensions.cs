@@ -1,6 +1,8 @@
-﻿using Educational.Core.BLL.MappingProfiles;
+﻿using Educational.Core.BLL.Factories;
+using Educational.Core.BLL.MappingProfiles;
 using Educational.Core.BLL.Services;
 using Educational.Core.BLL.Services.Interfaces;
+using Educational.Core.Common.Options;
 using Educational.Core.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -97,7 +99,9 @@ public static class WebApplicationBuilderExtensions
 
     private static void AddJwt(WebApplicationBuilder builder)
     {
-        var jwtOptions = builder.Configuration.GetSection("JwtIssuerOptions");
+        var jwtIssuerOptions = new JwtIssuerOptions();
+        builder.Configuration.GetSection("JwtIssuerOptions").Bind(jwtIssuerOptions);
+        builder.Services.AddSingleton(jwtIssuerOptions);
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -105,16 +109,18 @@ public static class WebApplicationBuilderExtensions
                 options.TokenValidationParameters = new()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions["Key"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtIssuerOptions.Key)),
 
                     ValidateLifetime = true,
 
                     ValidateIssuer = true,
-                    ValidIssuer = jwtOptions["Issuer"],
+                    ValidIssuer = jwtIssuerOptions.Issuer,
 
                     ValidateAudience = true,
-                    ValidAudience = jwtOptions["Audience"]
+                    ValidAudience = jwtIssuerOptions.Audience
                 };
             });
+
+        builder.Services.AddScoped<JwtFactory>();
     }
 }
