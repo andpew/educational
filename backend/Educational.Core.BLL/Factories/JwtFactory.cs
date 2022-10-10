@@ -14,6 +14,7 @@ public class JwtFactory
     public JwtFactory(JwtIssuerOptions options)
     {
         _options = options;
+        ThrowIfInvalidOptions();
         _jwtSecurityTokenHandler = new();
     }
 
@@ -24,7 +25,7 @@ public class JwtFactory
 
         var claims = new[]
         {
-            new Claim("SubId", id.ToString()),
+            new Claim("subId", id.ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, username),
             new Claim(JwtRegisteredClaimNames.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -40,5 +41,33 @@ public class JwtFactory
         );
 
         return _jwtSecurityTokenHandler.WriteToken(token);
+    }
+
+    private void ThrowIfInvalidOptions()
+    {
+        if (_options is null)
+        {
+            throw new ArgumentNullException("Issuer options", nameof(_options));
+        }
+        else if (_options.ValidFor <= 0)
+        {
+            throw new ArgumentException("Issuer options: Must be a non-zero", nameof(JwtIssuerOptions.ValidFor));
+        }
+        else if (_options.Issuer == string.Empty)
+        {
+            throw new ArgumentNullException("Issuer options", nameof(_options.Issuer));
+        }
+        else if (_options.Audience == string.Empty)
+        {
+            throw new ArgumentNullException("Issuer options", nameof(_options.Audience));
+        }
+        else if (_options.Key == string.Empty)
+        {
+            throw new ArgumentNullException("Issuer options", nameof(_options.Key));
+        }
+        else if (_options.Key.Length < 16)
+        {
+            throw new ArgumentException("Issuer options: Must have more than 15 characters", nameof(JwtIssuerOptions.Key));
+        }
     }
 }
