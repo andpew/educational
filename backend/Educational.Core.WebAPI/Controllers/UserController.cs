@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Educational.Core.WebAPI.Controllers;
 
 [Route("api/[controller]")]
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 public class UserController : ControllerBase
 {
