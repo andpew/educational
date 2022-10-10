@@ -6,13 +6,20 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LocalStorageService } from '../services/local-storage.service';
+import { LocalStorageKey } from '../enums/local-storage-key';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(private localStorageService: LocalStorageService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const token = this.localStorageService.getItem(LocalStorageKey.token);
+    if (token) {
+      request = request.clone({ setHeaders: { Authrozation: `Bearer ${token}` } });
+    }
+
     return next.handle(request);
   }
 }
