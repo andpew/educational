@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Educational.Core.BLL.Security;
+namespace Educational.Core.BLL.Helpers;
 
 public static class SecurityHelper
 {
