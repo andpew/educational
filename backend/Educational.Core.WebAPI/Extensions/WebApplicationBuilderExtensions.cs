@@ -25,8 +25,12 @@ public static class WebApplicationBuilderExtensions
         AddLogger(builder);
         AddDatabase(builder);
         AddSwagger(builder);
+
         builder.Services.AddMvc();
+
+        builder.Services.AddHttpContextAccessor();
         AddJwt(builder);
+
         AddAutoMapper(builder);
         AddCustomServices(builder);
     }

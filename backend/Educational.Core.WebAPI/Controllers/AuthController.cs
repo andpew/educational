@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Educational.Core.WebAPI.Controllers;
 
 [Route("api/[controller]")]
-[AllowAnonymous]
 [ApiController]
+[Authorize]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -18,21 +18,30 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterDTO userDTO)
     {
         await _authService.Register(userDTO);
-        return Ok("Check your mailbox");
+        return Ok("Check your mailbox.");
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Authorize([FromBody] UserLoginDTO userDTO)
     {
         return Ok(await _authService.Authorize(userDTO));
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] AuthTokenDTO tokenDTO)
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenDTO tokenDTO)
     {
         return Ok(await _authService.Refresh(tokenDTO));
+    }
+
+    [HttpPost("revoke")]
+    public async Task<IActionResult> Revoke([FromBody] RefreshTokenDTO tokenDTO)
+    {
+        await _authService.Revoke(tokenDTO);
+        return Ok("Refresh token has been successfully revoked.");
     }
 }

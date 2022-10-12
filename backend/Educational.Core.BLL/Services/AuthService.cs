@@ -8,6 +8,7 @@ using Educational.Core.BLL.Services.Interfaces;
 using Educational.Core.Common.DTO.Auth;
 using Educational.Core.DAL;
 using Educational.Core.DAL.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Educational.Core.BLL.Services;
@@ -15,12 +16,15 @@ namespace Educational.Core.BLL.Services;
 public sealed class AuthService : BaseService, IAuthService
 {
     private readonly JwtFactory _jwtFactory;
-    public AuthService(DataContext db, IMapper mapper, JwtFactory jwtFactory) : base(db, mapper)
+    private readonly IHttpContextAccessor _contextAccessor;
+    public AuthService(DataContext db, IMapper mapper,
+        JwtFactory jwtFactory, IHttpContextAccessor contextAccessor) : base(db, mapper)
     {
         _jwtFactory = jwtFactory;
+        _contextAccessor = contextAccessor;
     }
 
-    public async Task<AuthTokenDTO> Authorize(UserLoginDTO userDto)
+    public async Task<AuthTokensDTO> Authorize(UserLoginDTO userDto)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == userDto.Username);
 
@@ -75,14 +79,13 @@ public sealed class AuthService : BaseService, IAuthService
         await _db.SaveChangesAsync();
     }
 
-
-    public async Task<AuthTokenDTO> Refresh(AuthTokenDTO tokenDto)
+    public async Task<AuthTokensDTO> Refresh(RefreshTokenDTO tokenDto)
     {
-        var validatedToken = _jwtFactory.GetPrincipalFromToken(tokenDto.AccessToken);
+        var validatedToken = _contextAccessor.HttpContext?.User;
 
-        if (validatedToken is null)
+        if (validatedToken is null || !validatedToken.Claims.Any())
         {
-            throw new InvalidTokenException(tokenDto.RefreshToken);
+            throw new InvalidTokenException("access");
         }
 
         var userId = validatedToken.GetUserIdFromPrincipal();
@@ -90,35 +93,35 @@ public sealed class AuthService : BaseService, IAuthService
 
         if (userId is null || tokenId is null)
         {
-            throw new InvalidTokenException(tokenDto.RefreshToken);
+            throw new InvalidTokenException("access");
         }
 
         var userEntity = await _db.Users.FindAsync(userId);
 
         if (userEntity is null)
         {
-            throw new InvalidTokenException(tokenDto.RefreshToken);
+            throw new InvalidTokenException("access");
         }
 
         if (userEntity.VerifiedAt is null)
         {
-            throw new InvalidTokenException(tokenDto.RefreshToken);
+            throw new InvalidTokenException("access");
         }
 
         var storedRefreshToken = await _db.RefreshTokens
             .FirstOrDefaultAsync(token =>
                 token.JwtId == tokenId
                 && token.UserId == userId
-                && token.Token == tokenDto.RefreshToken);
+                && token.Token == tokenDto.Token);
 
         if (storedRefreshToken is null)
         {
-            throw new InvalidTokenException(tokenDto.RefreshToken);
+            throw new InvalidTokenException(tokenDto.Token);
         }
 
         if (storedRefreshToken.Invalidated || storedRefreshToken.Used)
         {
-            throw new InvalidTokenException(tokenDto.RefreshToken);
+            throw new InvalidTokenException(tokenDto.Token);
         }
 
         if (DateTime.UtcNow > storedRefreshToken.ExpiresAt)
@@ -142,5 +145,61 @@ public sealed class AuthService : BaseService, IAuthService
             AccessToken = accessToken.Stringify(),
             RefreshToken = refreshToken.Token
         };
+    }
+
+    public async Task Revoke(RefreshTokenDTO tokenDto)
+    {
+        var validatedToken = _contextAccessor.HttpContext?.User;
+
+        if (validatedToken is null || !validatedToken.Claims.Any())
+        {
+            throw new InvalidTokenException("access");
+        }
+
+        var userId = validatedToken.GetUserIdFromPrincipal();
+        var tokenId = validatedToken.GetTokenIdFromPrincipal();
+
+        if (userId is null || tokenId is null)
+        {
+            throw new InvalidTokenException("access");
+        }
+
+        var userEntity = await _db.Users.FindAsync(userId);
+
+        if (userEntity is null)
+        {
+            throw new InvalidTokenException("access");
+        }
+
+        if (userEntity.VerifiedAt is null)
+        {
+            throw new InvalidTokenException("access");
+        }
+
+        var storedRefreshToken = await _db.RefreshTokens
+            .FirstOrDefaultAsync(token =>
+                token.JwtId == tokenId
+                && token.UserId == userId
+                && token.Token == tokenDto.Token);
+
+        if (storedRefreshToken is null)
+        {
+            throw new InvalidTokenException(tokenDto.Token);
+        }
+
+        if (storedRefreshToken.Invalidated || storedRefreshToken.Used)
+        {
+            return;
+        }
+
+        if (DateTime.UtcNow > storedRefreshToken.ExpiresAt)
+        {
+            return;
+        }
+
+        storedRefreshToken.Invalidated = true;
+        storedRefreshToken.UpdatedAt = DateTime.UtcNow;
+        _db.RefreshTokens.Update(storedRefreshToken);
+        await _db.SaveChangesAsync();
     }
 }
