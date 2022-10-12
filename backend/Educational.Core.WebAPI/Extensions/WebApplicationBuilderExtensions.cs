@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using ILogger = Serilog.ILogger;
@@ -112,22 +113,32 @@ public static class WebApplicationBuilderExtensions
         builder.Configuration.GetSection("JwtIssuerOptions").Bind(jwtIssuerOptions);
         builder.Services.AddSingleton(jwtIssuerOptions);
 
+        var jwtRefreshTokenOptions = new JwtRefreshTokenOptions();
+        builder.Configuration.GetSection("JwtRefreshTokenOptions").Bind(jwtRefreshTokenOptions);
+        builder.Services.AddSingleton(jwtRefreshTokenOptions);
+
+        // Added for fixing different jwt claims types
+        JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+        TokenValidationParameters tokenValidationParameters = new()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtIssuerOptions.Key)),
+
+            ValidateLifetime = true,
+
+            ValidateIssuer = true,
+            ValidIssuer = jwtIssuerOptions.Issuer,
+
+            ValidateAudience = true,
+            ValidAudience = jwtIssuerOptions.Audience
+        };
+        builder.Services.AddSingleton(tokenValidationParameters);
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtIssuerOptions.Key)),
-
-                    ValidateLifetime = true,
-
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtIssuerOptions.Issuer,
-
-                    ValidateAudience = true,
-                    ValidAudience = jwtIssuerOptions.Audience
-                };
+                options.TokenValidationParameters = tokenValidationParameters;
             });
 
         builder.Services.AddScoped<JwtFactory>();
