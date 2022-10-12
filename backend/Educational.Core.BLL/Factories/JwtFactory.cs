@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Educational.Core.BLL.Factories;
 
-public class JwtFactory
+public sealed class JwtFactory
 {
     private readonly JwtIssuerOptions _issuerOptions;
     private readonly JwtRefreshTokenOptions _refreshTokenOptions;
