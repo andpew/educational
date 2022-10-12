@@ -21,4 +21,10 @@ public class UserController : ControllerBase
     {
         return Ok(await _userService.GetAllUsers());
     }
+
+    [HttpGet("from-token")]
+    public async Task<IActionResult> GetUserFromToken()
+    {
+        return Ok(await _userService.GetUserFromToken());
+    }
 }

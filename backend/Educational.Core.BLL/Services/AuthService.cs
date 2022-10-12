@@ -83,7 +83,7 @@ public sealed class AuthService : BaseService, IAuthService
     {
         var validatedToken = _contextAccessor.HttpContext?.User;
 
-        if (validatedToken is null || !validatedToken.Claims.Any())
+        if (validatedToken is null)
         {
             throw new InvalidTokenException("access");
         }
@@ -151,7 +151,7 @@ public sealed class AuthService : BaseService, IAuthService
     {
         var validatedToken = _contextAccessor.HttpContext?.User;
 
-        if (validatedToken is null || !validatedToken.Claims.Any())
+        if (validatedToken is null)
         {
             throw new InvalidTokenException("access");
         }
