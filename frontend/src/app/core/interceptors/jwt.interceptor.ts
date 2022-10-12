@@ -15,7 +15,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(private localStorageService: LocalStorageService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = this.localStorageService.getItem(LocalStorageKey.token);
+    const token = this.localStorageService.getItem(LocalStorageKey.accessToken);
     if (token) {
       request = request.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
     }

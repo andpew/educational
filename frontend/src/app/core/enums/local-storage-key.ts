@@ -1,3 +1,4 @@
 export enum LocalStorageKey {
-  token = 'token'
+  accessToken = 'accessToken',
+  refreshToken = 'refreshToken'
 };
