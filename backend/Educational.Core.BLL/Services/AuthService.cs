@@ -9,7 +9,6 @@ using Educational.Core.Common.DTO.Auth;
 using Educational.Core.DAL;
 using Educational.Core.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Educational.Core.BLL.Services;
 
@@ -27,17 +26,17 @@ public sealed class AuthService : BaseService, IAuthService
 
         if (user is null)
         {
-            throw new NotFoundException("User with given username is not found");
+            throw new InvalidUsernameOrPasswordException();
         }
 
         if (user.VerifiedAt is null)
         {
-            throw new NotVerifiedException("User is not verified");
+            throw new UserNotVerifiedException();
         }
 
         if (!SecurityHelper.VerifyPasswordHash(userDto.Password, user.PasswordHash, user.PasswordSalt))
         {
-            throw new InvalidPasswordException("Invalid password");
+            throw new InvalidUsernameOrPasswordException();
         }
 
         var accessToken = _jwtFactory.GenerateAccessToken(user.Id, user.Username, user.Email);
@@ -55,6 +54,11 @@ public sealed class AuthService : BaseService, IAuthService
 
     public async Task Register(UserRegisterDTO userDto)
     {
+        if (await _db.Users.AnyAsync(user => user.Username == userDto.Username || user.Email == userDto.Email))
+        {
+            throw new UserAlreadyExistsException();
+        }
+
         SecurityHelper.CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
         User user = new()
@@ -78,7 +82,7 @@ public sealed class AuthService : BaseService, IAuthService
 
         if (validatedToken is null)
         {
-            throw new SecurityTokenException("Invalid token");
+            throw new InvalidTokenException(tokenDto.RefreshToken);
         }
 
         var userId = validatedToken.GetUserIdFromPrincipal();
@@ -86,19 +90,19 @@ public sealed class AuthService : BaseService, IAuthService
 
         if (userId is null || tokenId is null)
         {
-            throw new SecurityTokenException("Invalid token");
+            throw new InvalidTokenException(tokenDto.RefreshToken);
         }
 
         var userEntity = await _db.Users.FindAsync(userId);
 
         if (userEntity is null)
         {
-            throw new SecurityTokenException("Invalid token");
+            throw new InvalidTokenException(tokenDto.RefreshToken);
         }
 
         if (userEntity.VerifiedAt is null)
         {
-            throw new SecurityTokenException("Invalid token");
+            throw new InvalidTokenException(tokenDto.RefreshToken);
         }
 
         var storedRefreshToken = await _db.RefreshTokens
@@ -109,17 +113,17 @@ public sealed class AuthService : BaseService, IAuthService
 
         if (storedRefreshToken is null)
         {
-            throw new SecurityTokenException("Invalid token");
+            throw new InvalidTokenException(tokenDto.RefreshToken);
         }
 
         if (storedRefreshToken.Invalidated || storedRefreshToken.Used)
         {
-            throw new SecurityTokenException("Invalid token");
+            throw new InvalidTokenException(tokenDto.RefreshToken);
         }
 
         if (DateTime.UtcNow > storedRefreshToken.ExpiresAt)
         {
-            throw new SecurityTokenException("Refresh token has expired");
+            throw new ExpiredRefreshTokenException();
         }
 
         storedRefreshToken.Used = true;

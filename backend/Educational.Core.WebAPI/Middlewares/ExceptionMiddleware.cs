@@ -29,11 +29,20 @@ namespace Educational.Core.WebAPI.Middlewares
                     case NotFoundException:
                         await HandleException(httpContext, ex, HttpStatusCode.NotFound);
                         break;
-                    case NotVerifiedException:
+                    case UserNotVerifiedException:
                         await HandleException(httpContext, ex, HttpStatusCode.BadRequest);
                         break;
-                    case InvalidPasswordException:
+                    case UserAlreadyExistsException:
                         await HandleException(httpContext, ex, HttpStatusCode.BadRequest);
+                        break;
+                    case InvalidUsernameOrPasswordException:
+                        await HandleException(httpContext, ex, HttpStatusCode.BadRequest);
+                        break;
+                    case InvalidTokenException:
+                        await HandleException(httpContext, ex, HttpStatusCode.Unauthorized);
+                        break;
+                    case ExpiredRefreshTokenException:
+                        await HandleException(httpContext, ex, HttpStatusCode.Unauthorized);
                         break;
                     default:
                         await HandleException(httpContext, ex, HttpStatusCode.InternalServerError);
