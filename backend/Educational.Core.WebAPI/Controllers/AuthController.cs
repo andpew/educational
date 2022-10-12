@@ -20,12 +20,19 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDTO userDTO)
     {
-        return Ok(await _authService.Register(userDTO));
+        await _authService.Register(userDTO);
+        return Ok("Check your mailbox");
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Authorize([FromBody] UserLoginDTO userDTO)
     {
         return Ok(await _authService.Authorize(userDTO));
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] AuthTokenDTO tokenDTO)
+    {
+        return Ok(await _authService.Refresh(tokenDTO));
     }
 }
