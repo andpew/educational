@@ -1,11 +1,11 @@
-import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { LocalStorageKey } from '../enums/local-storage-key';
-import { AuthToken } from '../models/auth/auth-token.model';
+import { AuthTokens } from '../models/auth/auth-tokens.model';
+import { RefreshToken } from '../models/auth/refresh-token.model';
 import { UserLogin } from '../models/auth/user-login.model';
 import { UserRegister } from '../models/auth/user-register.model';
-import { User } from '../models/user.model';
 import { HttpService } from './http.service';
 import { LocalStorageService } from './local-storage.service';
 
@@ -18,17 +18,56 @@ export class AuthService {
 
   constructor(
     private httpService: HttpService,
-    private localStorageService: LocalStorageService) { }
+    private localStorageService: LocalStorageService,
+    private router: Router) { }
 
-  register(userRegister: UserRegister): Observable<AuthToken> {
-    return this.httpService.postRequest<AuthToken>(this.routePrefix + '/register', userRegister).pipe();
+  register(userRegister: UserRegister): Observable<string> {
+    return this.httpService.postRequest<string>(this.routePrefix + '/register', userRegister);
   }
 
-  login(userLogin: UserLogin): Observable<AuthToken> {
-    return this.httpService.postRequest<AuthToken>(this.routePrefix + '/login', userLogin);
+  login(userLogin: UserLogin): Observable<AuthTokens> {
+    return this.httpService.postRequest<AuthTokens>(this.routePrefix + '/login', userLogin);
   }
 
-  setAuthToken(token: AuthToken): void {
-    this.localStorageService.setItem(LocalStorageKey.token, token.token);
+  refresh(): Observable<AuthTokens> {
+    return this.httpService.postRequest<AuthTokens>(this.routePrefix + '/refresh', this.getAuthTokens())
+      .pipe(
+        map((tokens) => {
+          this.setAuthTokens(tokens);
+          return tokens;
+        })
+      );
+  }
+
+  revoke(): Observable<string> {
+    const refreshToken = {
+      refreshToken: this.localStorageService.getItem(LocalStorageKey.refreshToken)
+    } as RefreshToken;
+
+    return this.httpService.postRequest<string>(this.routePrefix + '/revoke', refreshToken);
+  }
+
+  logout(): void {
+    this.revoke().subscribe().add(() => {
+      this.removeAuthTokens();
+      this.router.navigate(['/auth'], { replaceUrl: true });
+    });
+  }
+
+  getAuthTokens(): AuthTokens {
+    return {
+      accessToken: this.localStorageService.getItem(LocalStorageKey.accessToken),
+      refreshToken: this.localStorageService.getItem(LocalStorageKey.refreshToken)
+    } as AuthTokens;
+  }
+
+  setAuthTokens(tokens: AuthTokens): void {
+    this.localStorageService.setItem(LocalStorageKey.accessToken, tokens.accessToken);
+    this.localStorageService.setItem(LocalStorageKey.refreshToken, tokens.refreshToken);
+  }
+
+  removeAuthTokens(): void {
+    this.localStorageService.removeItem(LocalStorageKey.accessToken);
+    this.localStorageService.removeItem(LocalStorageKey.refreshToken);
   }
 }
