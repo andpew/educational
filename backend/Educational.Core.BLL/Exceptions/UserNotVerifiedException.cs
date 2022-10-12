@@ -2,7 +2,7 @@
 
 public sealed class UserNotVerifiedException : Exception
 {
-    public UserNotVerifiedException() : base("User is not verified")
+    public UserNotVerifiedException() : base("User is not verified.")
     {
 
     }
