@@ -16,4 +16,8 @@ export class UserService {
   getAllUsers(): Observable<User[]> {
     return this.httpService.getRequest<User[]>(this.routePrefix + '/all');
   }
+
+  getUserFromToken(): Observable<User> {
+    return this.httpService.getRequest<User>(this.routePrefix + '/from-token');
+  }
 }
