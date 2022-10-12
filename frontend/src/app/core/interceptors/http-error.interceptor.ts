@@ -4,14 +4,16 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
+  HttpErrorResponse,
+  HttpStatusCode
 } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -19,6 +21,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         switch (err.status) {
           case 0:
             return this.handleNoConnection(err);
+          case HttpStatusCode.Unauthorized:
+            return this.handleUnauthorized(request, next);
         }
         return throwError(() => err);
       })
@@ -32,5 +36,19 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     } as Error;
 
     return throwError(() => error);
+  }
+
+  private handleUnauthorized(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    return this.authService.refresh().pipe(
+      switchMap((resp) => {
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${resp.accessToken}`
+          }
+        });
+
+        return next.handle(request);
+      })
+    );
   }
 }
