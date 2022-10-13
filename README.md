@@ -31,14 +31,28 @@ Just an educational project for repeating and consolidating acquired knowledge.
 
 ```mermaid
 erDiagram
+    RefreshTokens {
+        integer Id PK
+        text Token 
+        text JwtId 
+        timestamp_with_time_zone ExpiresAt 
+        boolean Used 
+        boolean Invalidated 
+        integer UserId FK
+        timestamp_with_time_zone CreatedAt 
+        timestamp_with_time_zone UpdatedAt 
+    }
+
     Users {
         integer Id PK
-        text UserName
-        timestamp_with_time_zone CreatedAt
-        timestamp_with_time_zone UpdatedAt
-        bytea PasswordHash
-        bytea PasswordSalt
-        timestamp_with_time_zone VerifiedAt
-        text Email
+        text Username 
+        timestamp_with_time_zone CreatedAt 
+        timestamp_with_time_zone UpdatedAt 
+        bytea PasswordHash 
+        bytea PasswordSalt 
+        timestamp_with_time_zone VerifiedAt 
+        text Email 
     }
+
+    RefreshTokens }o--|| Users : "UserId"
 ```
