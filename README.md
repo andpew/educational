@@ -2,9 +2,10 @@
 
 Just an educational project for repeating and consolidating acquired knowledge.
 
-## Trello board
+## Boards
 
 - [Trello board](https://trello.com/b/PxRSBkcz/educational)
+- [Miro board](https://miro.com/app/board/uXjVPNkyWYg=/?share_link_id=696849428200)
 
 ## Applications
 
