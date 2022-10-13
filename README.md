@@ -6,7 +6,7 @@ Just an educational project for repeating and consolidating acquired knowledge.
 
 - [Trello board](https://trello.com/b/PxRSBkcz/educational)
 - [Miro board](https://miro.com/app/board/uXjVPNkyWYg=/?share_link_id=696849428200)
-- [Dbdiagram](https://dbdiagram.io/d/6348207af0018a1c5ffa0aed)
+- [Dbdiagram](https://dbdiagram.io/d/6348207af0018a1c5ffa0aed) (for creating used PgAdmin => Backup => plain => Only schema => Remove all checkboxes => Generate .sql => Import to the dbdiagram)
 
 ## Applications
 
