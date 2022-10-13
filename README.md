@@ -11,7 +11,6 @@ Just an educational project for repeating and consolidating acquired knowledge.
 ## Applications
 
 - [Backend](./backend) — [.NET 6](https://www.c-sharpcorner.com/article/what-is-new-in-net-6-0/), [PostgreSQL](https://www.postgresql.org)
-
 - [Frontend](./frontend) — [Angular 14](https://angular.io/), [rxjs](https://rxjs.dev)
 
 ## Requirements
