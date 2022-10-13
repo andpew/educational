@@ -2,10 +2,11 @@
 
 Just an educational project for repeating and consolidating acquired knowledge.
 
-## Boards
+## Boards & Diagrams
 
 - [Trello board](https://trello.com/b/PxRSBkcz/educational)
 - [Miro board](https://miro.com/app/board/uXjVPNkyWYg=/?share_link_id=696849428200)
+- [Dbdiagram](https://dbdiagram.io/d/6348207af0018a1c5ffa0aed)
 
 ## Applications
 
