@@ -28,6 +28,7 @@ Just an educational project for repeating and consolidating acquired knowledge.
 - [Visual Studio](https://visualstudio.microsoft.com/vs/)
 
 ## DB Schema
+For diagram creation used [Mermerd](https://github.com/KarnerTh/mermerd) tool
 
 ```mermaid
 erDiagram
