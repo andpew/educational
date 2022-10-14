@@ -2,11 +2,12 @@
 
 Just an educational project for repeating and consolidating acquired knowledge.
 
-## Boards & Diagrams
+## Boards & Diagrams & Design
 
 - [Trello board](https://trello.com/b/PxRSBkcz/educational)
 - [Miro board](https://miro.com/app/board/uXjVPNkyWYg=/?share_link_id=696849428200)
 - [Dbdiagram](https://dbdiagram.io/d/6348207af0018a1c5ffa0aed) (for creating used PgAdmin => Backup => plain => Only schema => Remove all checkboxes => Generate .sql => Import to the dbdiagram)
+- [Figma](https://www.figma.com/file/xzJ0f0rdb1m4axEygvU1Pj/Untitled?node-id=0%3A1)
 
 ## Applications
 
