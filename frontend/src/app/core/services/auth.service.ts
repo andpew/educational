@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 import { LocalStorageKey } from '../enums/local-storage-key';
 import { AuthTokens } from '../models/auth/auth-tokens.model';
 import { RefreshToken } from '../models/auth/refresh-token.model';
@@ -41,7 +41,7 @@ export class AuthService {
 
   revoke(): Observable<string> {
     const refreshToken = {
-      refreshToken: this.localStorageService.getItem(LocalStorageKey.refreshToken)
+      token: this.localStorageService.getItem(LocalStorageKey.refreshToken)
     } as RefreshToken;
 
     return this.httpService.postRequest<string>(this.routePrefix + '/revoke', refreshToken);
@@ -50,7 +50,7 @@ export class AuthService {
   logout(): void {
     this.revoke().subscribe().add(() => {
       this.removeAuthTokens();
-      this.router.navigate(['/auth'], { replaceUrl: true });
+      this.router.navigate(['/auth']);
     });
   }
 
@@ -69,5 +69,10 @@ export class AuthService {
   removeAuthTokens(): void {
     this.localStorageService.removeItem(LocalStorageKey.accessToken);
     this.localStorageService.removeItem(LocalStorageKey.refreshToken);
+  }
+
+  areTokensExist(): boolean {
+    const tokens = this.getAuthTokens();
+    return tokens.accessToken !== null && tokens.refreshToken !== null;
   }
 }
