@@ -7,7 +7,7 @@ namespace Educational.Core.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -18,7 +18,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterDTO userDTO)
     {
         await _authService.Register(userDTO);
@@ -26,7 +25,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    [AllowAnonymous]
     public async Task<IActionResult> Authorize([FromBody] UserLoginDTO userDTO)
     {
         return Ok(await _authService.Authorize(userDTO));
