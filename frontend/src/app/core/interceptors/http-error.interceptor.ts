@@ -22,7 +22,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           case 0:
             return this.handleNoConnection(err);
           case HttpStatusCode.Unauthorized:
-            return this.handleUnauthorized(request, next);
+            return this.handleUnauthorized(request, next, err);
         }
         return throwError(() => err);
       })
@@ -38,17 +38,29 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return throwError(() => error);
   }
 
-  private handleUnauthorized(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    return this.authService.refresh().pipe(
-      switchMap((resp) => {
-        request = request.clone({
-          setHeaders: {
-            Authorization: `Bearer ${resp.accessToken}`
-          }
-        });
+  private handleUnauthorized(request: HttpRequest<unknown>, next: HttpHandler, err: HttpErrorResponse):
+    Observable<HttpEvent<unknown>> | Observable<never> {
+    if (err.headers.has('Token-Expired')) {
+      return this.authService.refresh().pipe(
+        switchMap((resp) => {
+          request = request.clone({
+            setHeaders: {
+              Authorization: `Bearer ${resp.accessToken}`
+            }
+          });
 
-        return next.handle(request);
-      })
-    );
+          return next.handle(request);
+        })
+      );
+    }
+
+    const error = {
+      name: 'Unauthorized',
+      message: err.url
+    } as Error;
+
+    this.authService.logout();
+
+    return throwError(() => error);
   }
 }
