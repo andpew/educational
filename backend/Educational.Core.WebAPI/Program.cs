@@ -16,9 +16,11 @@ app.UseExceptionMiddleware();
 
 app.UseCors(builder =>
 {
+    builder.WithOrigins("http://localhost:4200");
     builder.AllowAnyHeader();
-    builder.AllowAnyOrigin();
     builder.AllowAnyMethod();
+    builder.AllowCredentials();
+    builder.WithExposedHeaders("Token-Expired");
 });
 
 if (app.Environment.IsDevelopment())

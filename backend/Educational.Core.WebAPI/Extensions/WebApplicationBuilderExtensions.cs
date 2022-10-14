@@ -143,6 +143,19 @@ public static class WebApplicationBuilderExtensions
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = tokenValidationParameters;
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception is SecurityTokenExpiredException)
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         builder.Services.AddScoped<JwtFactory>();
