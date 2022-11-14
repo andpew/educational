@@ -1,0 +1,47 @@
+name: Educational CD
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+  pull_request:
+    branches: [ "dev", "main" ]
+    
+env:
+  DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  BACKEND_REPO_NAME: ${{secrets.BACKEND_REPO_NAME}}
+  FRONTEND_REPO_NAME: ${{secrets.FRONTEND_REPO_NAME}}
+  
+
+jobs:
+  backend-build-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to the dockerhub
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: Build the Docker image
+        run: docker build . --tag $DOCKER_USERNAME/$BACKEND_REPO_NAME
+      - name: Push the Docker image to the Dockerhub
+        run: docker push $DOCKER_USERNAME/$DOCKER_BACKEND_NAME
+  frontend-build-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to the dockerhub
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: Build the Docker image
+        run: docker build . --tag $DOCKER_USERNAME/$FRONTEND_REPO_NAME
+      - name: Push the Docker image to the Dockerhub
+        run: docker push $DOCKER_USERNAME/$DOCKER_FRONTEND_NAME
+  cd:
+    runs-on: ubuntu-latest
+    needs: [backend-build-push, frontend-build-push]
+    steps:
+      - uses: actions/checkout@v3
