@@ -6,7 +6,7 @@ builder.Services.AddControllers();
 
 builder.ConfigureServices();
 
-builder.WebHost.UseUrls("https://*:5000");
+builder.WebHost.UseUrls("http://*:5000");
 
 var app = builder.Build();
 
