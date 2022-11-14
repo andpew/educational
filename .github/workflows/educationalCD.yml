@@ -22,12 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Login to the dockerhub
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        run: docker login -u $DOCKER_USERNAME --password-stdin
       - name: Build the Docker image
         run: docker build . --tag $DOCKER_USERNAME/$BACKEND_REPO_NAME
       - name: Push the Docker image to the Dockerhub
-        run: docker push $DOCKER_USERNAME/$DOCKER_BACKEND_NAME
+        run: docker push $DOCKER_USERNAME/$BACKEND_REPO_NAME
   frontend-build-push:
     runs-on: ubuntu-latest
     defaults:
@@ -36,12 +35,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Login to the dockerhub
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        run: docker login -u $DOCKER_USERNAME --password-stdin
       - name: Build the Docker image
         run: docker build . --tag $DOCKER_USERNAME/$FRONTEND_REPO_NAME
       - name: Push the Docker image to the Dockerhub
-        run: docker push $DOCKER_USERNAME/$DOCKER_FRONTEND_NAME
+        run: docker push $DOCKER_USERNAME/$FRONTEND_REPO_NAME
   cd:
     runs-on: ubuntu-latest
     needs: [backend-build-push, frontend-build-push]
