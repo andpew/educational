@@ -29,4 +29,4 @@ jobs:
           key: $SSH_KEY
           script: |
             docker compose down
-            docker compose up --force-recreate
+            docker compose up -d --force-recreate
