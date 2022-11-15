@@ -57,7 +57,7 @@ public static class WebApplicationBuilderExtensions
     {
         builder.Services.AddDbContext<DataContext>(o =>
         {
-            o.UseNpgsql(builder.Configuration.GetConnectionString("Educational"))
+            o.UseNpgsql(builder.Configuration.GetConnectionString("Educational")!)
                 .EnableDetailedErrors();
         });
     }
