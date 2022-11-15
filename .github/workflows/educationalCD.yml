@@ -2,9 +2,9 @@ name: Educational CD
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "dev", "main" ]
+    branches: [ "main" ]
     
 env:
   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
