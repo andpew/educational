@@ -28,5 +28,5 @@ jobs:
           username: $SSH_USERNAME
           key: $SSH_KEY
           script: |
-            docker compose down
-            docker compose up -d --force-recreate
+            docker compose pull
+            docker compose up -d
