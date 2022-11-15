@@ -11,6 +11,9 @@ env:
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
   BACKEND_REPO_NAME: ${{secrets.BACKEND_REPO_NAME}}
   FRONTEND_REPO_NAME: ${{secrets.FRONTEND_REPO_NAME}}
+  SSH_HOST: ${{secrets.SSH_HOST}}
+  SSH_USERNAME: ${{secrets.SSH_USERNAME}}
+  SSH_KEY: ${{SSH_KEY}}
   
 
 jobs:
@@ -44,4 +47,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [backend-build-push, frontend-build-push]
     steps:
-      - uses: actions/checkout@v3
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: $SSH_HOST
+          username: $SSH_USERNAME
+          password: $SSH_KEY
+          script: echo "Hello World"
