@@ -13,7 +13,7 @@ env:
   FRONTEND_REPO_NAME: ${{secrets.FRONTEND_REPO_NAME}}
   SSH_HOST: ${{secrets.SSH_HOST}}
   SSH_USERNAME: ${{secrets.SSH_USERNAME}}
-  SSH_KEY: ${{SSH_KEY}}
+  SSH_KEY: ${{secrets.SSH_KEY}}
   
 
 jobs:
