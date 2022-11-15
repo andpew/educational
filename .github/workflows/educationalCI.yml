@@ -7,12 +7,13 @@ on:
     branches: [ "main", "dev" ]
 
 jobs:
+
   backend-build:
+    runs-on: ubuntu-latest
     defaults:
       run: 
         working-directory: backend
-    runs-on: ubuntu-latest
-
+        
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -25,23 +26,22 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
   frontend-build:
+    runs-on: ubuntu-latest
     defaults:
       run: 
         working-directory: frontend
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: ['16.x']
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+        
+    env:
+      NODE_VERSION: '18.x'
+      
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js $NODE_VERSION
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: $NODE_VERSION
         cache: 'npm'
         cache-dependency-path: 'frontend/package-lock.json'
     - run: npm ci
